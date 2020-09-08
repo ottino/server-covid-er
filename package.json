@@ -4,11 +4,14 @@
   "description": "Servicio de datos COVID-19 ER Argentina",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "nodemon": "nodemon server.js"
   },
   "author": "Ottino Maximiliano Miguel",
   "license": "MIT",
   "dependencies": {
+    "express": "^4.17.1",
     "yargs": "^15.4.1"
   }
 }
