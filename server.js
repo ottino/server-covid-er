@@ -24,5 +24,16 @@ app.post('/agregar', function(req, res) {
      res.send(  parametros  );
 });
 
+app.delete('/delete', function(req, res) {
+
+    console.log(JSON.stringify(req.body));
+
+    let parametros = req.query;
+
+    driver.borrar( parametros['fecha'] );
+
+    res.send(  parametros  );
+});
+
 app.listen(puerto, 
     ()=> console.log(`Escuchando el puerto ${ puerto }`) );
