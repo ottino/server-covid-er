@@ -50,30 +50,19 @@ const borrar = ( fecha ) => {
 
     cargarDB();
     let nuevolinkImagenes = [];
-    let verifica = 0;
+    let fecha_if = fecha.replace(/"/g,'');
+
 
     linkImagenes.findIndex( item => {
 
-        if ( item.fecha != fecha ) {
-
-            nuevolinkImagenes.push( item );
-            linkImagenes = nuevolinkImagenes;
-
-        } else {
-
-            verifica = 1;
-
-        }
+        if ( item.fecha != fecha_if ) nuevolinkImagenes.push( item );
 
     });
 
-    if ( verifica == 1 )
-    {
-        guardarDB();
-        return true;
-    } else {
-        return false;
-    }
+    linkImagenes = nuevolinkImagenes;
+    guardarDB();
+
+    return linkImagenes;
 
 };
 

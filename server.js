@@ -30,9 +30,9 @@ app.delete('/delete', function(req, res) {
 
     let parametros = req.query;
 
-    driver.borrar( parametros['fecha'] );
+    let base = driver.borrar( parametros['fecha'] );
 
-    res.send(  parametros  );
+    res.send(  base  );
 });
 
 app.listen(puerto, 
