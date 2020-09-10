@@ -61,7 +61,13 @@ const borrar = ( fecha ) => {
 
     linkImagenes.findIndex( item => {
 
-        if ( item.fecha != fecha_if ) nuevolinkImagenes.push( item );
+        if ( item.fecha != fecha_if ) {
+
+            console.log( item );
+
+            nuevolinkImagenes.push( item );
+
+        };
 
     });
 
