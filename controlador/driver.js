@@ -10,6 +10,8 @@ const cargarDB = () => {
         linkImagenes = [];
     }
 
+    console.log('cargarDB: Base cargada con exito');
+
 };
 
 const guardarDB = () => {
@@ -19,6 +21,8 @@ const guardarDB = () => {
     fs.writeFile('db/minsaer-immg-db.json' , data , (e) => {
         if (e) throw new Error('Error al grabar',err);
     });
+
+    console.log('guardarDB: Base guardada con exito');
 
 };
 
@@ -35,6 +39,7 @@ const crearItem = ( link , fecha ) => {
 
     guardarDB();
 
+    console.log('crearItem: Item cargado con exito');
     return item;
 
 };
@@ -49,6 +54,7 @@ const getItems = () => {
 const borrar = ( fecha ) => {
 
     cargarDB();
+
     let nuevolinkImagenes = [];
     let fecha_if = fecha.replace(/"/g,'');
 
@@ -60,7 +66,10 @@ const borrar = ( fecha ) => {
     });
 
     linkImagenes = nuevolinkImagenes;
+
     guardarDB();
+
+    console.log('borrar: Item borrado exito');
 
     return linkImagenes;
 
