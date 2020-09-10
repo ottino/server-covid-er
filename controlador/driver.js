@@ -53,31 +53,42 @@ const getItems = () => {
 
 const borrar = ( fecha ) => {
 
-    cargarDB();
-
-    let nuevolinkImagenes = [];
     let fecha_if = fecha.replace(/"/g,'');
+    let nuevolinkImagenes = linkImagenes.filter(item => item.fecha !== fecha_if);
 
+    if (linkImagenes.length === nuevolinkImagenes.length) {
 
-    linkImagenes.findIndex( item => {
-
-        if ( item.fecha != fecha_if ) {
-
-            console.log( item );
-
-            nuevolinkImagenes.push( item );
-
-        };
-
-    });
-
-    linkImagenes = nuevolinkImagenes;
-
-    guardarDB();
+    } else {
+        linkImagenes = nuevolinkImagenes;
+        guardarDB();
+    }
 
     console.log('borrar: Item borrado exito');
 
     return linkImagenes;
+
+    // cargarDB();
+
+    // let nuevolinkImagenes = [];
+    // let fecha_if = fecha.replace(/"/g,'');
+
+
+    // linkImagenes.findIndex( item => {
+
+    //     if ( item.fecha != fecha_if ) {
+
+    //         console.log( item );
+
+    //         nuevolinkImagenes.push( item );
+
+    //     };
+
+    // });
+
+    // linkImagenes = nuevolinkImagenes;
+
+    // guardarDB();
+
 
 };
 
