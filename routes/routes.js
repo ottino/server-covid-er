@@ -5,32 +5,72 @@ const Link    = require('../models/link');
 
 app.get('/', (req, res)=>{
 
-    let items = driver.getItems();
-    //items.push( req.url );
-    res.send( items );
+    let desde = req.query.desde || 0;
+    desde = Number(desde);
+
+    let limite = req.query.limite || 5;
+    limite = Number(limite);
+
+    Link.find({ /*estado: true*/ }, 'fecha link')
+        .skip(desde)
+        .limit(limite)
+        .exec( (err, links) => {
+
+                    if ( err ) {
+                        return res.status(400).json({
+                            ok: false,
+                            err
+                        });
+                    }
+
+                    Link.count({ /*estado: true*/  }, (err, conteo)=> {
+
+
+                        res.json({
+                            ok:true,
+                            links,
+                            cantidad: conteo
+                        });
+
+                    });
+
+                });
 
 });
 
-// app.post('/agregar', function(req, res) {
+app.delete('/link/:id', function (req,res) {
 
-//      console.log(JSON.stringify(req.body));
+    let id = req.params.id;
 
-//      let parametros = req.query;
+    // Boorado fisico
+    Link.findByIdAndRemove(id , (err, linkBorrado) => {
 
-//      driver.crearItem( parametros['link'] , parametros['fecha'] );
+        if(err) {
+            return res.status(400).json({
+                ok: false,
+                err
+            });
+        };
 
-//      res.send(  parametros  );
-// });
+        if ( linkBorrado == null ){
 
-app.delete('/delete', function(req, res) {
+            return res.status(400).json({
+                ok: false,
+                error: {
+                    message: 'Link no encontrado'
+                }
+            });
 
-    console.log(JSON.stringify(req.body));
+        }
 
-    let parametros = req.query;
+        res.json({
+            ok:true,
+            link: linkBorrado
+        })
 
-    let base = driver.borrar( parametros['fecha'] );
+    });
 
-    res.send(  base  );
+
 });
 
 app.post('/link', function (req,res) {
