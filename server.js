@@ -1,39 +1,22 @@
-const express = require('express');
-const app = express();
-const driver = require('./controlador/driver') ;
+require('./config/config');
 
-// Si no existe va 6969. conf para utilizar Heroku
-const puerto = process.env.PORT || 6969;
+const express    = require('express');
+const app        = express();
+const bodyParser = require('body-parser');
+const mongoose   = require('mongoose');
 
-app.get('/', (req, res)=>{
+app.use( bodyParser.urlencoded({ extended: false }) );
+app.use( bodyParser.json() );
 
-    let items = driver.getItems();
-    //items.push( req.url );
-    res.send( items );
+// Rutas Get Post Put Delete
+app.use( require('./routes/routes') );
 
+// puerto 27017 puerto de mongo
+mongoose.connect('mongodb://localhost:27017/covid_er', (err , res)=>{
+    if ( err ) throw new err;
+    console.log('Base de datos [ONLINE]');
 });
 
-app.post('/agregar', function(req, res) {
 
-     console.log(JSON.stringify(req.body));
-
-     let parametros = req.query;
-
-     driver.crearItem( parametros['link'] , parametros['fecha'] );
-
-     res.send(  parametros  );
-});
-
-app.delete('/delete', function(req, res) {
-
-    console.log(JSON.stringify(req.body));
-
-    let parametros = req.query;
-
-    let base = driver.borrar( parametros['fecha'] );
-
-    res.send(  base  );
-});
-
-app.listen(puerto, 
-    ()=> console.log(`Escuchando el puerto ${ puerto }`) );
+app.listen(process.env.PORT,
+    ()=> console.log(`Escuchando el puerto ${ process.env.PORT }`) );
