@@ -1,8 +1,12 @@
 const express = require('express');
 const bcrypt  = require('bcrypt');
+const jwt     = require('jsonwebtoken');
 const driver  = require('../controlador/driver') ;
 const Link    = require('../models/link');
 const User    = require('../models/user');
+
+// middlewares propios
+const { verificarToken } = require('../middlewares/autenticacion');
 
 const app     = express();
 
@@ -36,11 +40,54 @@ app.post('/user', (req, res) => {
 
 app.post('/login', (req, res) => {
 
+    let body = req.body;
+
+    User.findOne({ email: body.email } , (err, userDB) => {
+
+        if (err){
+            return res.status(500).json({
+                ok:false,
+                err
+            });
+        }
+
+        if ( !userDB ) {
+            return res.status(400).json({
+                ok:false,
+                err: {
+                    message: 'Usuario o contraseña incorrectos'
+                }
+            });
+        }
+
+        if ( !bcrypt.compareSync(body.password , userDB.password ) ) {
+            return res.status(400).json({
+                ok:false,
+                err: {
+                    message: 'Usuario o contraseña incorrectos'
+                }
+            });
+        }
+
+        let token = jwt.sign(
+            {usuario:userDB},// payload
+            process.env.SEED,
+            { expiresIn: process.env.CADUCIDAD_TOKEN}
+        )
+
+        res.json({
+            ok:true,
+            usuario: userDB,
+            token
+        });
+
+
+    })
 
 
 });
 
-app.get('/', (req, res)=>{
+app.get('/', verificarToken , (req, res)=>{
 
     let desde = req.query.desde || 0;
     desde = Number(desde);
@@ -110,7 +157,7 @@ app.delete('/link/:id', function (req,res) {
 
 });
 
-app.post('/link', function (req,res) {
+app.post('/link', verificarToken , function (req,res) {
 
     let body = req.body; // pasa por el bodyParser
 
