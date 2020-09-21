@@ -8,6 +8,7 @@ const mongoose   = require('mongoose');
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
+mongoose.Promise = global.Promise;
 
 
 app.use( bodyParser.urlencoded({ extended: false }) );
@@ -15,12 +16,6 @@ app.use( bodyParser.json() );
 
 // Rutas Get Post Put Delete
 app.use( require('./routes/routes') );
-
-// puerto 27017 puerto de mongo
-// mongoose.connect('mongodb://localhost:27017/covid_er', (err , res)=>{
-//     if ( err ) throw new err;
-//     console.log('Base de datos [ONLINE]');
-// });
 
 mongoose.connect(process.env.URLDB,
     {useNewUrlParser: true, useUnifiedTopology: true});

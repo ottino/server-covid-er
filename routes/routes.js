@@ -1,7 +1,44 @@
 const express = require('express');
-const app     = express();
+const bcrypt  = require('bcrypt');
 const driver  = require('../controlador/driver') ;
 const Link    = require('../models/link');
+const User    = require('../models/user');
+
+const app     = express();
+
+app.post('/user', (req, res) => {
+
+    let body = req.body; // pasa por el bodyParser
+
+    let user = new User({
+        nombre  : body.nombre,
+        email   : body.email,
+        password: bcrypt.hashSync( body.password , 10),
+    });
+
+    user.save( (err, userDB) => {
+
+        if( err ) {
+            return res.status(400).json({
+                ok: false,
+                err
+            });
+        }
+
+        res.json({
+            ok:true,
+            user: userDB
+        });
+    });
+
+});
+
+
+app.post('/login', (req, res) => {
+
+
+
+});
 
 app.get('/', (req, res)=>{
 
