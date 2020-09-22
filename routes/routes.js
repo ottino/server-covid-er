@@ -87,42 +87,28 @@ app.post('/login', (req, res) => {
 
 });
 
-app.get('/', verificarToken , (req, res)=>{
-
-    let desde = req.query.desde || 0;
-    desde = Number(desde);
-
-    let limite = req.query.limite || 5;
-    limite = Number(limite);
+app.get('/', (req, res)=>{
 
     Link.find({ /*estado: true*/ }, 'fecha link')
-        .skip(desde)
-        .limit(limite)
         .exec( (err, links) => {
 
-                    if ( err ) {
-                        return res.status(400).json({
-                            ok: false,
-                            err
-                        });
-                    }
-
-                    Link.count({ /*estado: true*/  }, (err, conteo)=> {
-
-
-                        res.json({
-                            ok:true,
-                            links,
-                            cantidad: conteo
-                        });
-
-                    });
-
+            if ( err ) {
+                return res.status(400).json({
+                    ok: false,
+                    err
                 });
+            }
+
+            res.json({
+                ok:true,
+                links
+            });
+
+        });
 
 });
 
-app.delete('/link/:id', function (req,res) {
+app.delete('/link/:id', verificarToken , function (req,res) {
 
     let id = req.params.id;
 
